@@ -1,0 +1,10 @@
+{
+  "projects": {
+    "discount": {
+      "name": "discount",
+      "integrations": {},
+      "type": "angular",
+      "root": ""
+    }
+  }
+}
