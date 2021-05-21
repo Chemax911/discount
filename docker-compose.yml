@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+
+  nginxserver:
+    image: nginx:alpine
+    container_name: ngx-server
+    restart: unless-stopped
+    ports:
+        - '80:80'
+    volumes:
+      - './config/vhost.nginx.conf:/etc/nginx/conf.d/default.conf'
+    volumes_from:
+      - django
+
+  angular:
+    image: node
+    container_name: ng-web-server
+    volumes:
+      - './frontend/angular:/app'
+    command: bash -c 'cd app && ./node_modules/@angular/cli/bin/ng serve --port 4201 --host 0.0.0.0 --disable-host-check'
+    ports:
+      - '4201:4201'
+
+  mobile:
+    image: node
+    container_name: ng-mobile-server
+    volumes:
+      - './frontend/angular:/app'
+    command: bash -c 'cd app && ./node_modules/@angular/cli/bin/ng serve mobi --port 4202 --host 0.0.0.0 --disable-host-check'
+    ports:
+      - '4202:4202'
+
+  django:
+    container_name: dj-server
+    build: .
+    command: python3.9 manage.py runserver 0.0.0.0:8008
+    volumes:
+      - './backend:/app'
+    ports:
+      - '8081:8008'
